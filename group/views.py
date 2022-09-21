@@ -120,14 +120,19 @@ class LikePost(APIView):
     def post(self,request):
         data = request.data
         user = request.user
+        
         try:
+            user_object = Accounts.objects.get(username = user)
             print(data['id'])
+            if Post.objects.filter(id = data['id'],liked_persons = user).exists():
+                return Response({'status':'already liked'},status=200)    
             post = Post.objects.get(id=data['id'])
             print('nice')
-            post.likes = F('likes')+1
+            # post.likes = F('likes')+1
+            post.likes = post.likes + 1
             print('welcome')
             post.save()
-            user_object = Accounts.objects.get(username = user)
+            
             post.liked_persons.add(user_object)
             post.save()
         except Exception as e:
@@ -136,9 +141,35 @@ class LikePost(APIView):
         
         return Response({'status':'sucess'},status=200)
 
+class RemoveLike(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request):
+        data = request.data
+        user = request.user
+        
+        try:
+            user_object = Accounts.objects.get(username = user)
+            print(data['id'])
+            if Post.objects.filter(id = data['id'],liked_persons = user).exists():
+                    
+                post = Post.objects.get(id=data['id'])
+                print('nice')
+                # post.likes = F('likes')-1
+                post.likes = post.likes - 1 
+                print('welcome')
+                post.save()
 
+                post.liked_persons.remove(user_object)
+                post.save()
+                return Response({'status':'sucess'},status=200)
+            return Response({'status':'invalide user'},status=200)
+        except Exception as e:
+            print(e)
+            return Response({'status':'error occured'})
+        
+        
 
         
  
  
-  
+   

@@ -12,6 +12,8 @@ urlpatterns = [
     
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', views.MyTokenObtainPairView.as_view()),
+
     path('signup',views.Signup.as_view()),
     path('otp_login',views.otp_login.as_view()),
     path('verify_otp',views.otp_verify.as_view()),

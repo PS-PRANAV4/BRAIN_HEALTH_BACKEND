@@ -2,7 +2,7 @@
 import json
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .serializer import AccountSerializer, DocSerializer
+from .serializer import AccountSerializer, DocSerializer,MyTokenObtainPairSerializer
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser,MultiPartParser,FormParser
 from twilio.rest import Client
@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.backends import TokenBackend
 from Brain_Health import settings
 import jwt
+from rest_framework_simplejwt.views import TokenObtainPairView
 # Create your views here.
 
 class Signup(APIView):
@@ -148,3 +149,7 @@ class Verifyss(APIView):
         except Exception as e:
             val = {'status':'false'}
             return JsonResponse(val,safe=False)
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

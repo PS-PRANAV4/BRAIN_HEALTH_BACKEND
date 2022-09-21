@@ -16,7 +16,8 @@ class GroupSerializer(serializers.ModelSerializer):
  
 
 class PostSerializer(serializers.ModelSerializer):
-    liked_persons = AccountSerializer(many=True,read_only =True)
+    # liked_persons = AccountSerializer(many=True,read_only =True)
+    liked_persons = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     groups = GroupSerializer(read_only = True)
     class Meta:
         model = Post

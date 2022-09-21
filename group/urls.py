@@ -15,10 +15,11 @@ urlpatterns = [
     path('group-enter/<int:groups>', views.GroupEnterView.as_view(), ),
     path('show-comments', views.ShowComments.as_view(), ),
     path('post-like', views.LikePost.as_view(), ),
+    path('post-unlike', views.RemoveLike.as_view(), ),
     
 
     
 
     
      
-]
+] 

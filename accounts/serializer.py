@@ -1,8 +1,10 @@
 from dataclasses import field, fields
 from pyexpat import model
+
 from wsgiref.validate import validator
 from .models import Accounts,DocCertificate
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
@@ -60,3 +62,15 @@ class DocModelSerializer(serializers.ModelSerializer):
         model = DocCertificate
         fields = ('certi','user')
         
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        print(data)
+        token = self.get_token(self.user)
+        print(token)
+        data['user'] = str(self.user)
+        data['id'] = self.user.id
+        return data
