@@ -14,6 +14,7 @@ from pathlib import Path
 
 
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'cover_photos.apps.CoverPhotosConfig',
     'group.apps.GroupConfig',
+    'chat',
     
 ]
 
@@ -91,6 +94,13 @@ REST_FRAMEWORK = {
   
 }
 
+
+ASGI_APPLICATION = "Brain_Health.routing.application" #routing.py will handle the ASGI
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+        }
+    }
 
 WSGI_APPLICATION = 'Brain_Health.wsgi.application'
 
