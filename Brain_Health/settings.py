@@ -96,12 +96,12 @@ REST_FRAMEWORK = {
 }
 
 
-ASGI_APPLICATION = "Brain_Health.routing.application" #routing.py will handle the ASGI
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': "channels.layers.InMemoryChannelLayer"
-        }
-    }
+#ASGI_APPLICATION = "Brain_Health.routing.application" #routing.py will handle the ASGI
+#CHANNEL_LAYERS = {
+#    'default': {
+#        'BACKEND': "channels.layers.InMemoryChannelLayer"
+#        }
+#    }
 
 WSGI_APPLICATION = 'Brain_Health.wsgi.application'
 
@@ -153,7 +153,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [ 
+    os.path.join('static')
+]
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 
 MEDIA_URL = '/media/'
