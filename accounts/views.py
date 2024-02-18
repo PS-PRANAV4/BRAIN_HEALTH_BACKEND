@@ -19,7 +19,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 class Signup(APIView):
 
-    
+    authentication_classes = []
     def post(self,request,*args,**kwargs):
         user = request.user
         print(user)
@@ -27,31 +27,25 @@ class Signup(APIView):
         if 'certi' in request.data:
             print('hello')
             print(request.data['certi'])
-        serializer =  DocSerializer(data=data, context={'request': request})
+            serializer =  DocSerializer(data=data, context={'request': request})
         
-        if serializer.is_valid():
+            if serializer.is_valid():
             
-            serializer.save()
-            return JsonResponse('user is  created',safe=False)
+                serializer.save()
+                return JsonResponse('user is  created',safe=False)
+        else:
+            print(request.data)
+            Accounts.objects.create_user(first_name=request.data['first_name'],last_name=request.data['last_name'],username=request.data['username'],email=request.data['email'],phone_number=request.data['phone_number'],designation="CUSTOMER",password=request.data['password'])
+            print("data created")
+            return JsonResponse('data created',safe=False)    
+      
+    
+     
+    
 
-        # data = MultiPartParser().parse(request)
-        # print(data)
-        # data = JSONParser().parse(request)
-        # print(data)
-        
-        print(request)
-        
-         
-        
-        # data = request.POST['file']
-        
-        # print(data)
-        # user_serializer = DocSerializer(data=request.data)
-        # print(user_serializer)
-        # if user_serializer.is_valid():
-        #     user_serializer.save()
-        #     return JsonResponse('user created',safe=False)
-        # else:
+    
+    
+    
         return JsonResponse('user is not created',safe=False)
 
 class otp_login(APIView):

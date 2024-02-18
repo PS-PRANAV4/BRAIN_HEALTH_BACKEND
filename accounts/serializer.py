@@ -73,4 +73,5 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         print(token)
         data['user'] = str(self.user)
         data['id'] = self.user.id
+        data['user_type'] = self.user.designation
         return data

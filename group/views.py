@@ -17,16 +17,26 @@ from django.db.models import F
 
 # Create your views here.
 class CreateGroups(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self,request):
         data = request.data
+        user = request.user
+        
         try:
+            print('data')
+            
             if data['group_members']:
                 try:
-                    admin = DocCertificate.objects.get(user__username = data['admin'] )
+                    print('pranav')
+                    print(data)
+                    
+                    admin = DocCertificate.objects.get(user__username = user.username )
                     group = Groups.objects.create(name=data['name'],admin=admin)
-                    user = Accounts.objects.get(username=data['group_members'])
-                    print(user)
-                    group.group_members.add(user)
+                    for user_name in data['group_members']:
+                        
+                        user = Accounts.objects.get(username=user_name)
+                        print(user)
+                        group.group_members.add(user)
                     group.save()
                     return JsonResponse('nice',safe=False)
                 except Exception as e:
@@ -46,27 +56,32 @@ class CreateGroups(APIView):
                 return JsonResponse('only doctors can create groups',safe=False)
     
 
-class GetGroups(generics.ListAPIView):
+class GetGroups(APIView):
     queryset = Groups.objects.all()
     serializer_class = GroupSerializer
     model = Groups
     permission_classes = [IsAuthenticated]
-    def list(self, request):
-        print(request.user)
-        print(request.auth)
-        print(request.content_type)
-        print(request.stream)
-        try:
-            user = request.user
-        
+    def post(self, request):
+        if request.data.get('user_type') == "DOC":
+            try:
+                user = request.user
+            
 
-            admins = DocCertificate.objects.get(user__username=user)
-            # Note the use of `get_queryset()` instead of `self.queryset`
-            queryset = self.model.objects.filter(admin=admins)
-            serializer = GroupSerializer(queryset, many=True)
+                admins = DocCertificate.objects.get(user__username=user)
+                # Note the use of `get_queryset()` instead of `self.queryset`
+                queryset = self.model.objects.filter(admin=admins)
+                serializer = GroupSerializer(queryset, many=True)
+                print(serializer.data)
+                return Response(serializer.data)
+            except:
+                return Response({'status':'this is doc view'},status=400)
+        else:
+            user = request.user
+            
+            groups = user.user_conections.all()
+            serializer = GroupSerializer(groups, many=True)
             return Response(serializer.data)
-        except:
-            return Response({'status':'this is doc view'},status=400)
+            
 
 class GroupEnterView(generics.ListAPIView):
     queryset = Post.objects.all()
@@ -106,13 +121,16 @@ class ShowComments(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         data = request.data
-        post = Post.objects.get(id = data['post'])
+        post = Post.objects.get(id = data)
         comments = Comments.objects.filter(post = post)
         serializer = CommentSerializer(comments,many = True)
         return Response(serializer.data)
 
 
 # class CreateComment(generics.CreateAPIView):
+
+    
+
 
         
 class LikePost(APIView):
@@ -171,5 +189,10 @@ class RemoveLike(APIView):
 
         
  
- 
-   
+class GetComment(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request):
+        print(request.data)
+        comment = Comments.objects.filter(post__id=request.data)
+        serialized_data = CommentSerializer(comment,many=True)
+        return Response(serialized_data.data)

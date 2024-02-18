@@ -16,6 +16,8 @@ urlpatterns = [
     path('show-comments', views.ShowComments.as_view(), ),
     path('post-like', views.LikePost.as_view(), ),
     path('post-unlike', views.RemoveLike.as_view(), ),
+    path('get-comment',views.GetComment.as_view()),
+
     
 
     

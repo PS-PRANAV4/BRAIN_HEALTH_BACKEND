@@ -19,7 +19,7 @@ from accounts.models import DocCertificate,Accounts
 class Groups(models.Model):
     name = models.CharField(max_length=30)
     admin = models.ForeignKey(DocCertificate,on_delete=models.CASCADE,related_name='admin')
-    group_members = models.ManyToManyField(Accounts,null=True,blank=True)
+    group_members = models.ManyToManyField(Accounts,null=True,blank=True,related_name="user_conections")
     group_description = models.TextField(blank=True, null=True)
     group_profile_pic = models.ImageField(upload_to = 'group/group_profile_pic', blank = True, null = True)
     

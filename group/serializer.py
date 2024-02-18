@@ -9,9 +9,12 @@ class GroupSerializer(serializers.ModelSerializer):
     
     group_members = AccountSerializer(read_only= True, many = True)
     admin = DocModelSerializer
+    total_group_members = serializers.SerializerMethodField()
     class Meta:
         model = Groups
-        fields = ('id','name','admin','group_members','group_description','group_profile_pic')
+        fields = ('id','name','admin','group_members','group_description','group_profile_pic','total_group_members')
+    def get_total_group_members(self, obj):
+        return obj.group_members.count()
 
  
 
@@ -23,7 +26,6 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('id','description','photo','likes','liked_persons','groups')
         
-
 
 
 
